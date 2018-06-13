@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>PTcheck论文检测报告</title>
+		<link rel="stylesheet" href="../css/base.css" />
+		<style type="text/css">
+		a {
+    color: #0796fe;
+}
+a:hover{
+    color:#0796fe!important;
+}
+			.mainContainer {
+				padding: 20px;
+	
+			}
+			
+			.navigation span {
+				display: inline-block;
+				padding-left: 5px;
+				padding-right: 5px;
+				color: #666;
+			}
+			
+			.btn_gray {
+				border: solid 1px #dddddd;
+				background-color: #eeeeee;
+				border-radius: 5px;
+				cursor: pointer;
+			}
+			
+			.btn_gray:hover,
+			.btn_blue {
+				background-color: #0099ff;
+				border: solid 1px #0099ff;
+				color: #fff!important;
+				border-radius: 5px;
+				cursor: pointer;
+			}
+			.para{
+				padding-top:20px;
+			}
+			
+			.duanluo{
+				padding-left:20px;
+				
+				padding-bottom: 5px;
+			}
+			.duanluo span{
+				display: inline-block;
+				padding-left:5px;
+				padding-right: 5px;
+				border: solid 1px #999;
+				color:#999;
+			}
+			.l{
+				line-height: 20px;
+				padding-bottom: 5px;
+			}
+			.l span{
+				color:#333;
+			}
+			.mymodify{
+				font-size:12px;
+			}
+			.mymodify textarea{
+				width:98%;
+				height:100px;
+				color:#333;
+				clear:both;
+			}
+			textarea{
+				padding:10px;
+				line-height: 20px;
+			}
+		</style>
+		<script type="text/javascript">
+
+        var isstorage=false;
+        var danhao;
+        var result= new Array();
+         function trimStr(str) {
+
+            if ((typeof (str) != "string") || !str) {
+
+                return "";
+
+            }
+
+            return str.replace(/(^\s*)|(\s*$)/g, "");
+
+        }
+          
+        function myclick() {
+            window.parent.parent.ViewMain.window.location.href = "../../htmls/jianchong_.htm";
+        }
+        function submitPart(obj, target) {
+            var parent = target.parentNode;
+            if(parent.getAttribute("data")=="add"){
+              var mynext = parent.nextSibling;
+              parent.setAttribute("data","remove");
+              parent.parentNode.removeChild(mynext);
+            }
+            else{
+            	parent.setAttribute("data","add");
+            	var temphtml = document.createElement("div");
+                temphtml.innerHTML = "<input type=\"hidden\" value=\""+ parent.getAttribute("paraseq") +"\"><div name=\"mymodify\" class=\"mymodify\" >"
+					+"<div class=\"a999\">改重内容（请对本句修改之后，点击“临时保存”，然后进入报告左侧“修改文档”页面中获取修改后的内容）：</div>"
+					+"<div><textarea>"+obj
+					+"</textarea>"
+					+"</div>"
+					+"<div align=\"right\" class=\"a999\" style=\"margin-top:14px;\">（注意：改完请及时到“修改文档”复制到原文）<span class=\"btn-gray btn a333\" onclick=\"mysave(this)\">临时保存</span></div>"
+				+"</div>";
+            	   parent.parentNode.insertBefore(temphtml, null);
+            }
+
+        }
+
+		function myNavigate(){
+		 document.getElementById("a_url").click();
+		}
+       
+        function mysave(target) {
+            var tempsen = trimStr(target.parentNode.previousSibling.lastChild.value.replace(/\"/g,"\\\"").replace(/\'/g,"\\\'"));
+            var paraseq = target.parentNode.parentNode.parentNode.firstChild.value;            
+            var mydiv = target.parentNode.parentNode.parentNode.previousSibling;
+             if (mydiv.nodeName == "#text") {
+                mydiv = mydiv.previousSibling;
+            }
+             
+            mydiv.lastChild.setAttribute("onclick", "submitPart('" + tempsen + "',this)");
+           mydiv.setAttribute("data","remove");
+           if (mydiv.firstChild.innerHTML != "已修改") {
+                var xiugai = document.createElement("span");
+                xiugai.setAttribute("style", "font-size:12px;color:#00AEAE;margin-right:10px;");
+                xiugai.innerHTML = "已修改";
+                mydiv.insertBefore(xiugai, mydiv.lastChild);
+               }
+            
+            var parent = target.parentNode.parentNode.parentNode;
+            parent.parentNode.removeChild(parent);
+            if(!isstorage)
+            {
+            window.parent.parent.parent.myset(paraseq, tempsen);
+            }
+            else
+            {
+            myset(paraseq, tempsen);
+            }
+        }
+        window.onload = function() {
+            danhao = document.getElementById("danhao").value;
+            if (window.localStorage) {
+                isstorage = true;
+            }
+            if (!isstorage) {
+                result = window.parent.parent.parent.modifyPara;
+                
+            }
+            else {
+                var temp = localStorage.getItem(danhao);
+                if (temp) {
+                    result = eval("(" + temp + ")");
+                }
+            }
+            if (result) {
+            	
+                for (var i = 0; i < result.length; i++) {
+                	
+                    //var all = $(":hidden");
+                    var all = getClass("div","modify");
+                   
+                    for (var j = 0; j < all.length; j++) {
+                        if (all[j].getAttribute("paraseq") == result[i].para) {
+                        	
+                            var xiugai = document.createElement("span");
+                            xiugai.setAttribute("style", "font-size:12px;color:#00AEAE;margin-right:10px;");
+                            xiugai.innerHTML = "已修改";
+                            all[j].insertBefore(xiugai, all[j].lastChild);
+                            all[j].lastChild.setAttribute("onclick", "submitPart('" + result[i].text.replace(/\"/g,"\\\"").replace(/\'/g,"\\\'") + "',this)");
+                        }
+                    }
+
+                }
+            }  
+        }
+
+
+        function mydivclick(e,obj) {
+            if (e.target.tagName.toUpperCase() != "INPUT") {
+                obj.lastChild.previousSibling.click();
+            }
+        }
+
+        function getClass(tagname, className) { //tagname指元素，className指class的值
+            var tagname = document.getElementsByTagName(tagname);  //获取指定元素
+            var tagnameAll = [];     //这个数组用于存储所有符合条件的元素
+            for (var i = 0; i < tagname.length; i++) {     //遍历获得的元素
+                if (tagname[i].className == className) {     //如果获得的元素中的class的值等于指定的类名，就赋值给tagnameAll
+                    tagnameAll[tagnameAll.length] = tagname[i];
+                }
+            }
+            return tagnameAll;
+
+        }
+
+       
+        
+        
+         function myset(paraseq, sen) {
+         	
+            var reg = new RegExp("\"", "g")
+            var model = "{\"para\":\"" + paraseq + "\",\"text\": \"" + sen + "\"}";
+            var mo = eval("(" + model + ")");
+            var exist = false;
+            for (var i = 0; i < result.length; i++) {
+                if (mo.para == result[i].para) {
+                    exist = true;
+                    result[i].text = mo.text;
+                }
+            }
+            if (!exist) {
+                result.push(mo);
+            }
+            localStorage.removeItem(danhao);
+            localStorage.setItem(danhao, json_encode(result));
+        }
+        
+        function json_decode(str_json) {
+            // Decodes the JSON representation into a PHP value  
+            //  
+            // version: 906.1806  
+            // discuss at: http://phpjs.org/functions/json_decode  
+            // +      original by: Public Domain (http://www.json.org/json2.js)  
+            // + reimplemented by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)  
+            // + improved by: T.J. Leahy  
+            // *     example 1: json_decode('[\n    "e",\n    {\n    "pluribus": "unum"\n}\n]');  
+            // *     returns 1: ['e', {pluribus: 'unum'}]  
+            /* 
+            http://www.JSON.org/json2.js 
+            2008-11-19 
+            Public Domain. 
+            NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK. 
+            See http://www.JSON.org/js.html 
+            */
+
+            var json = this.window.JSON;
+            if (typeof json === 'object' && typeof json.parse === 'function') {
+                return json.parse(str_json);
+            }
+
+            var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+            var j;
+            var text = str_json;
+
+            // Parsing happens in four stages. In the first stage, we replace certain  
+            // Unicode characters with escape sequences. JavaScript handles many characters  
+            // incorrectly, either silently deleting them, or treating them as line endings.  
+            cx.lastIndex = 0;
+            if (cx.test(text)) {
+                text = text.replace(cx, function(a) {
+                    return '\\u' +
+            ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+                });
+            }
+
+            // In the second stage, we run the text against regular expressions that look  
+            // for non-JSON patterns. We are especially concerned with '()' and 'new'  
+            // because they can cause invocation, and '=' because it can cause mutation.  
+            // But just to be safe, we want to reject all unexpected forms.  
+
+            // We split the second stage into 4 regexp operations in order to work around  
+            // crippling inefficiencies in IE's and Safari's regexp engines. First we  
+            // replace the JSON backslash pairs with '@' (a non-JSON character). Second, we  
+            // replace all simple value tokens with ']' characters. Third, we delete all  
+            // open brackets that follow a colon or comma or that begin the text. Finally,  
+            // we look to see that the remaining characters are only whitespace or ']' or  
+            // ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.  
+            if (/^[\],:{}\s]*$/.
+        test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').
+            replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+            replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+
+                // In the third stage we use the eval function to compile the text into a  
+                // JavaScript structure. The '{' operator is subject to a syntactic ambiguity  
+                // in JavaScript: it can begin a block or an object literal. We wrap the text  
+                // in parens to eliminate the ambiguity.  
+
+                j = eval('(' + text + ')');
+
+                return j;
+            }
+
+            // If the text is not JSON parseable, then a SyntaxError is thrown.  
+            throw new SyntaxError('json_decode');
+        }
+
+        function json_encode(mixed_val) {
+            // Returns the JSON representation of a value  
+            //  
+            // version: 906.1806  
+            // discuss at: http://phpjs.org/functions/json_encode  
+            // +      original by: Public Domain (http://www.json.org/json2.js)  
+            // + reimplemented by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)  
+            // + improved by: T.J. Leahy  
+            // *     example 1: json_encode(['e', {pluribus: 'unum'}]);  
+            // *     returns 1: '[\n    "e",\n    {\n    "pluribus": "unum"\n}\n]'  
+            /* 
+            http://www.JSON.org/json2.js 
+            2008-11-19 
+            Public Domain. 
+            NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK. 
+            See http://www.JSON.org/js.html 
+            */
+            var json = this.window.JSON;
+            if (typeof json === 'object' && typeof json.stringify === 'function') {
+                return json.stringify(mixed_val);
+            }
+
+            var value = mixed_val;
+
+            var quote = function(string) {
+                var escapable = /[\\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+                var meta = {    // table of character substitutions  
+                    '\b': '\\b',
+                    '\t': '\\t',
+                    '\n': '\\n',
+                    '\f': '\\f',
+                    '\r': '\\r',
+                    '"': '\\"',
+                    '\\': '\\\\'
+                };
+
+                escapable.lastIndex = 0;
+                return escapable.test(string) ?
+        '"' + string.replace(escapable, function(a) {
+            var c = meta[a];
+            return typeof c === 'string' ? c :
+            '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+        }) + '"' :
+        '"' + string + '"';
+            };
+
+            var str = function(key, holder) {
+                var gap = '';
+                var indent = '    ';
+                var i = 0;          // The loop counter.  
+                var k = '';          // The member key.  
+                var v = '';          // The member value.  
+                var length = 0;
+                var mind = gap;
+                var partial = [];
+                var value = holder[key];
+
+                // If the value has a toJSON method, call it to obtain a replacement value.  
+                if (value && typeof value === 'object' &&
+            typeof value.toJSON === 'function') {
+                    value = value.toJSON(key);
+                }
+
+                // What happens next depends on the value's type.  
+                switch (typeof value) {
+                    case 'string':
+                        return quote(value);
+
+                    case 'number':
+                        // JSON numbers must be finite. Encode non-finite numbers as null.  
+                        return isFinite(value) ? String(value) : 'null';
+
+                    case 'boolean':
+                    case 'null':
+                        // If the value is a boolean or null, convert it to a string. Note:  
+                        // typeof null does not produce 'null'. The case is included here in  
+                        // the remote chance that this gets fixed someday.  
+
+                        return String(value);
+
+                    case 'object':
+                        // If the type is 'object', we might be dealing with an object or an array or  
+                        // null.  
+                        // Due to a specification blunder in ECMAScript, typeof null is 'object',  
+                        // so watch out for that case.  
+                        if (!value) {
+                            return 'null';
+                        }
+
+                        // Make an array to hold the partial results of stringifying this object value.  
+                        gap += indent;
+                        partial = [];
+
+                        // Is the value an array?  
+                        if (Object.prototype.toString.apply(value) === '[object Array]') {
+                            // The value is an array. Stringify every element. Use null as a placeholder  
+                            // for non-JSON values.  
+
+                            length = value.length;
+                            for (i = 0; i < length; i += 1) {
+                                partial[i] = str(i, value) || 'null';
+                            }
+
+                            // Join all of the elements together, separated with commas, and wrap them in  
+                            // brackets.  
+                            v = partial.length === 0 ? '[]' :
+                    gap ? '[\n' + gap +
+                    partial.join(',\n' + gap) + '\n' +
+                    mind + ']' :
+                    '[' + partial.join(',') + ']';
+                            gap = mind;
+                            return v;
+                        }
+
+                        // Iterate through all of the keys in the object.  
+                        for (k in value) {
+                            if (Object.hasOwnProperty.call(value, k)) {
+                                v = str(k, value);
+                                if (v) {
+                                    partial.push(quote(k) + (gap ? ': ' : ':') + v);
+                                }
+                            }
+                        }
+
+                        // Join all of the member texts together, separated with commas,  
+                        // and wrap them in braces.  
+                        v = partial.length === 0 ? '{}' :
+                gap ? '{\n' + gap + partial.join(',\n' + gap) + '\n' +
+                mind + '}' : '{' + partial.join(',') + '}';
+                        gap = mind;
+                        return v;
+                }
+            };
+
+            // Make a fake root object containing our value under the key of ''.  
+            // Return the result of stringifying the value.  
+            return str('', {
+                '': value
+            });
+        } 
+       
+    </script>
+	</head>
+
+	<body><a href="http://www.ptcheck.com/tea/segment.aspx" target="_blank" id="a_url" style="display:none;" ></a> <input type="hidden" id="danhao" value="164480550726939699" /><div class="mainContainer"><div align="center" class="navigation"><a href="paper_1.htm"><span class="btn_gray">首页</span></a><a  href="paper_1.htm"><span class="btn_gray">上一页</span></a><a href="#"><span class="btn_gray">下一页</span></a><a href="paper_2.htm">	<span class="btn_gray">尾页</span></a><span>页码：2/2页</span></div><div class="zhengwen"><div class="para"><div class="duanluo"><span>127</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.9是本系统设计的第一块4*4矩阵键盘，其按键与对应的键值都有在图中标出。 </span><span >第二块4*4矩阵键盘如图4.10所示。 </span></div><div class="modify" align="right" paraseq="126"><span class="btn btn-blue" onclick="submitPart('图4.9是本系统设计的第一块4*4矩阵键盘，其按键与对应的键值都有在图中标出。第二块4*4矩阵键盘如图4.10所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>128</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.10 设计的矩阵键盘2 </span></div></div><div class="para"><div class="duanluo"><span>129</span></div><div class="l"><span style="margin-left:25px"></span><span >本系统的键盘扫描程序是通过Python的第三方库pad4pi实现的，pad4pi是专门为Raspberry Pi实现键盘扫描的一个第三方库， </span><span >使用者仅需要在创建一个keypad程序时传入选择的4个行GPIO引脚、4个列GPIO引脚和一个4*4的列表KEYPAD， </span><span >KEYPAD里面存储的是每个按键对应的键值。 </span><span >pad4pi内部也是根据上述原理做的一个程序，它先将使用者给出的行列引脚进行内部绑定，然后创建一个字典，由于在4*4键盘中， </span><span >每个按键按下程序设计使得8个引脚的输出都是固定的值，这个值它在内部先定义了16个字符串，在KEYPAD列表传进去时，pad4pi内部首先创建一个字典， </span><span >然后会对列表进行循环，然后在字典中追加一一对应的key-value对，当程序读取到8个引脚状态改变时并扫描到哪一行时， </span><span >直接根据此时的引脚状态获取到按键值，并将此按键值传递到中断函数中，作为中断函数的参数。 </span><span >图4.11是安装pad4pi的指令。 </span></div><div class="modify" align="right" paraseq="128"><span class="btn btn-blue" onclick="submitPart('本系统的键盘扫描程序是通过Python的第三方库pad4pi实现的，pad4pi是专门为Raspberry Pi实现键盘扫描的一个第三方库，使用者仅需要在创建一个keypad程序时传入选择的4个行GPIO引脚、4个列GPIO引脚和一个4*4的列表KEYPAD，KEYPAD里面存储的是每个按键对应的键值。pad4pi内部也是根据上述原理做的一个程序，它先将使用者给出的行列引脚进行内部绑定，然后创建一个字典，由于在4*4键盘中，每个按键按下程序设计使得8个引脚的输出都是固定的值，这个值它在内部先定义了16个字符串，在KEYPAD列表传进去时，pad4pi内部首先创建一个字典，然后会对列表进行循环，然后在字典中追加一一对应的key-value对，当程序读取到8个引脚状态改变时并扫描到哪一行时，直接根据此时的引脚状态获取到按键值，并将此按键值传递到中断函数中，作为中断函数的参数。图4.11是安装pad4pi的指令。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>130</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.11 安装pad4pi </span></div></div><div class="para"><div class="duanluo"><span>131</span></div><div class="l"><span style="margin-left:25px"></span><span >4.4 Raspberry Pi和提示灯 </span></div></div><div class="para"><div class="duanluo"><span>132</span></div><div class="l"><span style="margin-left:25px"></span><span >系统设计了4个提示灯，编号为ABCD，当在学习状态是，A灯会亮； </span><span >当B灯亮时则说明使用者应该要按下矩阵键盘中的某个按键，好让程序能获得一个键值，使lirc能继续学习； </span><span >当C灯亮时，说明使用者虽然按下了按键，但是10s内没有收到红外信号； </span><span >而D灯是当使用者把Raspberry Pi当做普通遥控器时，如果按下一个有用的按键，则D灯闪烁。 </span><span >相关电路图如图4.12所示。 </span></div><div class="modify" align="right" paraseq="131"><span class="btn btn-blue" onclick="submitPart('系统设计了4个提示灯，编号为ABCD，当在学习状态是，A灯会亮；当B灯亮时则说明使用者应该要按下矩阵键盘中的某个按键，好让程序能获得一个键值，使lirc能继续学习；当C灯亮时，说明使用者虽然按下了按键，但是10s内没有收到红外信号；而D灯是当使用者把Raspberry Pi当做普通遥控器时，如果按下一个有用的按键，则D灯闪烁。相关电路图如图4.12所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>133</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.12 提示灯电路图 </span></div></div><div class="para"><div class="duanluo"><span>134</span></div><div class="l"><span style="margin-left:25px"></span><span >这四个引脚定义在OUT_PINS列表中， </span><span >其中GPIO1、GPIO13、GPIO16、GPIO19分别为OUT_PINS[0]、OUT_PINS[1]、OUT_PINS[2]、OUT_PINS[3]。 </span><span >后面的论述中将使用OUT_PINS代替。 </span></div><div class="modify" align="right" paraseq="133"><span class="btn btn-blue" onclick="submitPart('这四个引脚定义在OUT_PINS列表中，其中GPIO1、GPIO13、GPIO16、GPIO19分别为OUT_PINS[0]、OUT_PINS[1]、OUT_PINS[2]、OUT_PINS[3]。后面的论述中将使用OUT_PINS代替。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>135</span></div><div class="l"><span style="margin-left:25px"></span><span >4.5 学习功能与遥控功能的实现 </span></div></div><div class="para"><div class="duanluo"><span>136</span></div><div class="l"><span style="margin-left:25px"></span><span >学习与遥控整体程序流程图如图4.13所示。 </span></div></div><div class="para"><div class="duanluo"><span>137</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.13 学习与遥控流程图 </span></div></div><div class="para"><div class="duanluo"><span>138</span></div><div class="l"><span style="margin-left:25px"></span><span >4.5.1 学习功能 </span></div></div><div class="para"><div class="duanluo"><span>139</span></div><div class="l"><span style="margin-left:25px"></span><span >系统学习与本地遥控的代码是单独放在一个文件的，不依赖于web系统，有Python单独启动一个进程运行。 </span><span >代码里面通过一个死循环来确保程序一直运行而不结束，通过对键盘的扫描并实现中断，在中断函数里面更改当前按键信息， </span><span >循环判断按键是否是学习键来开始学习、退出学习或者是普通遥控功能。 </span><span >当学习结束之后进入数据库更新操作。 </span></div><div class="modify" align="right" paraseq="138"><span class="btn btn-blue" onclick="submitPart('系统学习与本地遥控的代码是单独放在一个文件的，不依赖于web系统，有Python单独启动一个进程运行。代码里面通过一个死循环来确保程序一直运行而不结束，通过对键盘的扫描并实现中断，在中断函数里面更改当前按键信息，循环判断按键是否是学习键来开始学习、退出学习或者是普通遥控功能。当学习结束之后进入数据库更新操作。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>140</span></div><div class="l"><span style="margin-left:25px"></span><span >系统学习功能与遥控功能的实现依赖于强大的lirc软件，但是lirc是基于Linux的， </span><span >所以用python操作的话必须要使用Python与linux交互的工具，这里采用的是Python的第三方库pexpect和subprocess。 </span><span >首先安装这两个库，执行如图4.14所示的命令。 </span></div><div class="modify" align="right" paraseq="139"><span class="btn btn-blue" onclick="submitPart('系统学习功能与遥控功能的实现依赖于强大的lirc软件，但是lirc是基于Linux的，所以用python操作的话必须要使用Python与linux交互的工具，这里采用的是Python的第三方库pexpect和subprocess。首先安装这两个库，执行如图4.14所示的命令。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>141</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.14 安装pexpect和subprocess </span></div></div><div class="para"><div class="duanluo"><span>142</span></div><div class="l"><span style="margin-left:25px"></span><span >Pexpect能很方便的与Raspberry Pi的linux系统通信，当使用pexpect执行一条linux命令时，它会创建一个阻塞的线程， </span><span >直到这条linux命令运行结束或者异常退出，在线程阻塞时，pexpect可以对linux命令的返回结果进行匹配，匹配成功返回匹配的索引， </span><span >开发者可以根据不同的索引做出不同的操作。 </span><span >如果什么也匹配不到，则会一直阻塞，直到用户主动发送退出指令或者超时。 </span><a href="../sentence_detail/262.htm" target="right" class="orange">Subprocess则是可以运行linux命令并将结果以字符串形式返回。</a><span >这两个库是完成学习功能的基石。 </span></div><div class="modify" align="right" paraseq="141"><span class="btn btn-blue" onclick="submitPart('Pexpect能很方便的与Raspberry Pi的linux系统通信，当使用pexpect执行一条linux命令时，它会创建一个阻塞的线程，直到这条linux命令运行结束或者异常退出，在线程阻塞时，pexpect可以对linux命令的返回结果进行匹配，匹配成功返回匹配的索引，开发者可以根据不同的索引做出不同的操作。如果什么也匹配不到，则会一直阻塞，直到用户主动发送退出指令或者超时。Subprocess则是可以运行linux命令并将结果以字符串形式返回。这两个库是完成学习功能的基石。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>143</span></div><div class="l"><span style="margin-left:25px"></span><span >数据初始化：本课题采用的Raspberry Pi的GPIO工作方式为BCM，所以在开始的时候设置GPIO的工作方式。 </span><span >Raspberry Pi GPIO工作中，如果特定功能的引脚设置为其它用途，将会发出警告，所以代码中将警告设置为不警告。 </span><span >此外还初始化了几个全局变量：study（bool类型，用于判断是否按下学习键，默认为False）、study_key（list类型， </span><span >用于保存按下过的键值）、press_key（str类型，用于保存当前按下的按键的键值）和remote_name（str类型， </span><span >用于保存当前遥控器的名字）。 </span></div><div class="modify" align="right" paraseq="142"><span class="btn btn-blue" onclick="submitPart('数据初始化：本课题采用的Raspberry Pi的GPIO工作方式为BCM，所以在开始的时候设置GPIO的工作方式。Raspberry Pi GPIO工作中，如果特定功能的引脚设置为其它用途，将会发出警告，所以代码中将警告设置为不警告。此外还初始化了几个全局变量：study（bool类型，用于判断是否按下学习键，默认为False）、study_key（list类型，用于保存按下过的键值）、press_key（str类型，用于保存当前按下的按键的键值）和remote_name（str类型，用于保存当前遥控器的名字）。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>144</span></div><div class="l"><span style="margin-left:25px"></span><span >键盘扫描和中断的注册：首先定义矩阵键盘对应键值、行引脚和列引脚，由于本课题使用了两个键盘，所以不管是键值、行引脚列引脚都要定义两种，如图4.15所示。 </span><span >接着将定义的值分别传入pad4pi，这样键盘扫描程序就定义好了，再使用pad4pi为每个键盘注册中断，中断函数为同一个（printKey）。 </span></div><div class="modify" align="right" paraseq="143"><span class="btn btn-blue" onclick="submitPart('键盘扫描和中断的注册：首先定义矩阵键盘对应键值、行引脚和列引脚，由于本课题使用了两个键盘，所以不管是键值、行引脚列引脚都要定义两种，如图4.15所示。接着将定义的值分别传入pad4pi，这样键盘扫描程序就定义好了，再使用pad4pi为每个键盘注册中断，中断函数为同一个（printKey）。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>145</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.15 键盘扫描及中断函数注册 </span></div></div><div class="para"><div class="duanluo"><span>146</span></div><div class="l"><span style="margin-left:25px"></span><span >中断函数里面的内容很简单，它带了一个参数key，进入中断时，这个key值就是当前使用者按下的那个键的键值。 </span><span >中断函数流程如图4.16。 </span></div><div class="modify" align="right" paraseq="145"><span class="btn btn-blue" onclick="submitPart('中断函数里面的内容很简单，它带了一个参数key，进入中断时，这个key值就是当前使用者按下的那个键的键值。中断函数流程如图4.16。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>147</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.16 触发中断时的逻辑处理 </span></div></div><div class="para"><div class="duanluo"><span>148</span></div><div class="l"><span style="margin-left:25px"></span><span >学习逻辑功能实现：当使用者第一次按下学习键时，全局变量study将会在中断函数中变成True，程序运行学习功能。 </span><span >学习功能逻辑使用的是利用pexpect执行lirc的录制红外的命令，命令执行后，可能产生的结果一共有7中，如图4.17所示。 </span></div><div class="modify" align="right" paraseq="147"><span class="btn btn-blue" onclick="submitPart('学习逻辑功能实现：当使用者第一次按下学习键时，全局变量study将会在中断函数中变成True，程序运行学习功能。学习功能逻辑使用的是利用pexpect执行lirc的录制红外的命令，命令执行后，可能产生的结果一共有7中，如图4.17所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>149</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.17 录制过程中可能返回的结果 </span></div></div><div class="para"><div class="duanluo"><span>150</span></div><div class="l"><span style="margin-left:25px"></span><span >现在说明这7种情况： </span></div></div><div class="para"><div class="duanluo"><span>151</span></div><div class="l"><span style="margin-left:25px"></span><span >①	 Lirc录制指令刚运行时，需要按下回车才能继续执行； </span></div></div><div class="para"><div class="duanluo"><span>152</span></div><div class="l"><span style="margin-left:25px"></span><span >②	 Lirc需要再接收一个回车，才能开始录制，计算gap值； </span></div></div><div class="para"><div class="duanluo"><span>153</span></div><div class="l"><span style="margin-left:25px"></span><span >③	 在开始录制时，如果10s内没有接收到红外信号，linux命令退出程序逻辑在匹配退出是处理，此时不处理； </span></div><div class="modify" align="right" paraseq="152"><span class="btn btn-blue" onclick="submitPart('③	 在开始录制时，如果10s内没有接收到红外信号，linux命令退出程序逻辑在匹配退出是处理，此时不处理；',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>154</span></div><div class="l"><span style="margin-left:25px"></span><span >④	 输入一个想要的键值，按回车继续 </span></div></div><div class="para"><div class="duanluo"><span>155</span></div><div class="l"><span style="margin-left:25px"></span><span >⑤	 输入键值后，10s没有接收到红外信号； </span></div></div><div class="para"><div class="duanluo"><span>156</span></div><div class="l"><span style="margin-left:25px"></span><span >⑥	 Linux命令执行完毕 </span></div></div><div class="para"><div class="duanluo"><span>157</span></div><div class="l"><span style="margin-left:25px"></span><span >⑦	 超出一定时间没有匹配到linux返回的上述任何一个值，超时继续等待，此时不处理。 </span></div><div class="modify" align="right" paraseq="156"><span class="btn btn-blue" onclick="submitPart('⑦	 超出一定时间没有匹配到linux返回的上述任何一个值，超时继续等待，此时不处理。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>158</span></div><div class="l"><span style="margin-left:25px"></span><span >学习的整个功能流程图如图4.18所示。 </span></div></div><div class="para"><div class="duanluo"><span>159</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.18 学习功能流程示意 </span></div></div><div class="para"><div class="duanluo"><span>160</span></div><div class="l"><span style="margin-left:25px"></span><span >当index为3时，对应了情况④，此时需要等待使用按下按键触发中断，将press_key赋值，程序会将press_key发送到linux进程， </span><span >重复如此，直到用户再次按下学习键，学习结束。 </span><span >这个逻辑流程图如图4.19所示。 </span></div><div class="modify" align="right" paraseq="159"><span class="btn btn-blue" onclick="submitPart('当index为3时，对应了情况④，此时需要等待使用按下按键触发中断，将press_key赋值，程序会将press_key发送到linux进程，重复如此，直到用户再次按下学习键，学习结束。这个逻辑流程图如图4.19所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>161</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.19 按键与学习 </span></div></div><div class="para"><div class="duanluo"><span>162</span></div><div class="l"><span style="margin-left:25px"></span><span >当学习完成后，程序会将当前学习好的文本内容复制到lirc的当前设备信息中，并且调用update函数，将学习完成的按键持久化到数据库中， </span><span >流程图如图4.20所示。 </span></div><div class="modify" align="right" paraseq="161"><span class="btn btn-blue" onclick="submitPart('当学习完成后，程序会将当前学习好的文本内容复制到lirc的当前设备信息中，并且调用update函数，将学习完成的按键持久化到数据库中，流程图如图4.20所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>163</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.20 学习完成功能示意流程图 </span></div></div><div class="para"><div class="duanluo"><span>164</span></div><div class="l"><span style="margin-left:25px"></span><span >Web和硬件能够交互就是依靠这最后一步了，将学习好的遥控信息持久化到数据库中，update函数流程图如图4.21所示。 </span></div><div class="modify" align="right" paraseq="163"><span class="btn btn-blue" onclick="submitPart('Web和硬件能够交互就是依靠这最后一步了，将学习好的遥控信息持久化到数据库中，update函数流程图如图4.21所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>165</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.21 数据持久化流程示意图 </span></div></div><div class="para"><div class="duanluo"><span>166</span></div><div class="l"><span style="margin-left:25px"></span><span >4.5.2 遥控功能 </span></div></div><div class="para"><div class="duanluo"><span>167</span></div><div class="l"><span style="margin-left:25px"></span><span >如果使用者没有按下学习键，那么此时Raspberry Pi相当于遥控器，使用者可以按下任何一个键（如果该键学习过）， </span><a href="../sentence_detail/299.htm" target="right" class="orange">Raspberry Pi就会通过lirc将对应的红外信号发出。</a><span >万能遥控器的遥控功能逻辑示意图如图4.22所示。 </span></div><div class="modify" align="right" paraseq="166"><span class="btn btn-blue" onclick="submitPart('如果使用者没有按下学习键，那么此时Raspberry Pi相当于遥控器，使用者可以按下任何一个键（如果该键学习过），Raspberry Pi就会通过lirc将对应的红外信号发出。万能遥控器的遥控功能逻辑示意图如图4.22所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>168</span></div><div class="l"><span style="margin-left:25px"></span><span >图4.22 万能遥控的遥控功能示意 </span></div></div><div class="para"><div class="duanluo"><span>169</span></div><div class="l"><span style="margin-left:25px"></span><span >因为lirc发送红外是需要两个条件的，第一个是设备的名字，第二个是设备的按键名字，所以只有两个都不为空的时候才能进行发射。 </span><span >但是，有时候会有没有把矩阵键盘上的所有按键都学完，那么就会发送失败，即什么也不操作，发送成功时让D灯闪一下。 </span><span >获取remote_name时是依赖lirc的打印当前设备名字的命令：&rdquo;sudo irsend list &lsquo;&rsquo; &lsquo;&rsquo; &rdquo;，这条命令会返回一条字符串， </span><span >格式下：&rdquo;irsend:*&rdquo;，&rdquo;*&rdquo;代表的就是当前设备的名字，程序使用了字符串分割来获取remote_name。 </span></div><div class="modify" align="right" paraseq="168"><span class="btn btn-blue" onclick="submitPart('因为lirc发送红外是需要两个条件的，第一个是设备的名字，第二个是设备的按键名字，所以只有两个都不为空的时候才能进行发射。但是，有时候会有没有把矩阵键盘上的所有按键都学完，那么就会发送失败，即什么也不操作，发送成功时让D灯闪一下。获取remote_name时是依赖lirc的打印当前设备名字的命令：&rdquo;sudo irsend list &lsquo;&rsquo; &lsquo;&rsquo; &rdquo;，这条命令会返回一条字符串，格式下：&rdquo;irsend:*&rdquo;，&rdquo;*&rdquo;代表的就是当前设备的名字，程序使用了字符串分割来获取remote_name。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>170</span></div><div class="l"><span style="margin-left:25px"></span><span >4.6 硬件设计总结 </span></div></div><div class="para"><div class="duanluo"><span>171</span></div><div class="l"><span style="margin-left:25px"></span><span >硬件设计就是整个学习和遥控功能，依赖于Raspberry Pi、红外拓展板、指示灯和两个矩阵键盘。 </span><span >在整个设计中，使用proteus对硬件电路进行了多次的设计与修改，使用visio绘画了多种可能的流程图。 </span><span >设计过程中进行了大量的实验，让学习与遥控部分变得更加的可靠。 </span></div><div class="modify" align="right" paraseq="170"><span class="btn btn-blue" onclick="submitPart('硬件设计就是整个学习和遥控功能，依赖于Raspberry Pi、红外拓展板、指示灯和两个矩阵键盘。在整个设计中，使用proteus对硬件电路进行了多次的设计与修改，使用visio绘画了多种可能的流程图。设计过程中进行了大量的实验，让学习与遥控部分变得更加的可靠。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>172</span></div><div class="l"><span style="margin-left:25px"></span><span >5  WEB端设计 </span></div></div><div class="para"><div class="duanluo"><span>173</span></div><div class="l"><span style="margin-left:25px"></span><span >本章节将详细描述WEB端部分，包括了数据的设计、信息验证模块、远程遥控模块、设备命名模块。 </span></div><div class="modify" align="right" paraseq="172"><span class="btn btn-blue" onclick="submitPart('本章节将详细描述WEB端部分，包括了数据的设计、信息验证模块、远程遥控模块、设备命名模块。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>174</span></div><div class="l"><span style="margin-left:25px"></span><span >5.1 WEB端整体架构 </span></div></div><div class="para"><div class="duanluo"><span>175</span></div><div class="l"><span style="margin-left:25px"></span><span >WEB端使用Django快速开始的一个项目，项目命名为xupt-ghj，一共分为6大模块，每个模块之间都是采用的RESTful设计。 </span><span >其总体架构图如图5.1所示。 </span></div><div class="modify" align="right" paraseq="174"><span class="btn btn-blue" onclick="submitPart('WEB端使用Django快速开始的一个项目，项目命名为xupt-ghj，一共分为6大模块，每个模块之间都是采用的RESTful设计。其总体架构图如图5.1所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>176</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.1 WEB端整体架构 </span></div></div><div class="para"><div class="duanluo"><span>177</span></div><div class="l"><span style="margin-left:25px"></span><span >5.2 基于嵌入式的万能遥控器的数据库设计 </span></div></div><div class="para"><div class="duanluo"><span>178</span></div><div class="l"><span style="margin-left:25px"></span><span >本课题只使用了两个表，一个是T_XUPT_USER表，它里面存储着一些登录验证信息，如账号密码姓名等； </span><span >一个是T_XUPT_DEVICE， </span><span >它里面存储的是设备的真实名字、学习过的按键、绝对路径、使用者起的名字以及一个用来表示是否命名完成的状态。 </span></div><div class="modify" align="right" paraseq="177"><span class="btn btn-blue" onclick="submitPart('本课题只使用了两个表，一个是T_XUPT_USER表，它里面存储着一些登录验证信息，如账号密码姓名等；一个是T_XUPT_DEVICE，它里面存储的是设备的真实名字、学习过的按键、绝对路径、使用者起的名字以及一个用来表示是否命名完成的状态。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>179</span></div><div class="l"><span style="margin-left:25px"></span><a href="../sentence_detail/320.htm" target="right" class="orange">数据库的建表操作是由使用者在Django的model中定义字段类型，再经由Django自动的创建表。</a><span >表T_XUPT_USER的定义如图5.2所示。 </span></div><div class="modify" align="right" paraseq="178"><span class="btn btn-blue" onclick="submitPart('数据库的建表操作是由使用者在Django的model中定义字段类型，再经由Django自动的创建表。表T_XUPT_USER的定义如图5.2所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>180</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.2 表T_XUPT_USER的设计 </span></div></div><div class="para"><div class="duanluo"><span>181</span></div><div class="l"><span style="margin-left:25px"></span><span >表T_XUPT_DEVICE的字段有点多，因为它包含了每个按键，而系统设计的时候采用了两个矩阵键盘一共使用了23个学习键值。 </span><span >表T_XUPT_DEVICE的定义如图5.2所示。 </span></div><div class="modify" align="right" paraseq="180"><span class="btn btn-blue" onclick="submitPart('表T_XUPT_DEVICE的字段有点多，因为它包含了每个按键，而系统设计的时候采用了两个矩阵键盘一共使用了23个学习键值。表T_XUPT_DEVICE的定义如图5.2所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>182</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.3 表T_XUPT_DEVICE的设计 </span></div></div><div class="para"><div class="duanluo"><span>183</span></div><div class="l"><span style="margin-left:25px"></span><span >表设计完成后，在命令行先执行如图5.4的命令，这个命令意思是说创建了一些数据库日志，在之后使用者可以通过这些日志进行数据的更新和回滚； </span><span >然后再执行如图5.5的命令，这是说读取数据库日志，再进行数据库的更新。 </span></div><div class="modify" align="right" paraseq="182"><span class="btn btn-blue" onclick="submitPart('表设计完成后，在命令行先执行如图5.4的命令，这个命令意思是说创建了一些数据库日志，在之后使用者可以通过这些日志进行数据的更新和回滚；然后再执行如图5.5的命令，这是说读取数据库日志，再进行数据库的更新。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>184</span></div><div class="l"><span style="margin-left:25px"></span><a href="../sentence_detail/328.htm" target="right" class="orange">图5.3 创建数据库日志</a></div></div><div class="para"><div class="duanluo"><span>185</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.3 更新数据库 </span></div></div><div class="para"><div class="duanluo"><span>186</span></div><div class="l"><span style="margin-left:25px"></span><a href="../sentence_detail/330.htm" target="right" class="orange">接下来django就在sqlite3数据库中创建了这两个表。</a></div><div class="modify" align="right" paraseq="185"><span class="btn btn-blue" onclick="submitPart('接下来django就在sqlite3数据库中创建了这两个表。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>187</span></div><div class="l"><span style="margin-left:25px"></span><span >5.3 信息验证模块 </span></div></div><div class="para"><div class="duanluo"><span>188</span></div><div class="l"><span style="margin-left:25px"></span><span >信息验证模块包括两个模块，一个是登录模块，这是进入远程遥控系统的唯一路径； </span><span >一个是密码修改模块，这是考虑到使用者忘记密码无法登录时，可以通过修改密码来重置密码，再进行登录。 </span><span >框架图如图5.4所示。 </span></div><div class="modify" align="right" paraseq="187"><span class="btn btn-blue" onclick="submitPart('信息验证模块包括两个模块，一个是登录模块，这是进入远程遥控系统的唯一路径；一个是密码修改模块，这是考虑到使用者忘记密码无法登录时，可以通过修改密码来重置密码，再进行登录。框架图如图5.4所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>189</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.4 信息验证框架 </span></div></div><div class="para"><div class="duanluo"><span>190</span></div><div class="l"><span style="margin-left:25px"></span><span >5.3.1 登录模块 </span></div></div><div class="para"><div class="duanluo"><span>191</span></div><div class="l"><span style="margin-left:25px"></span><span >登录模块是整个远程遥控系统的起点，页面使用jQuery进行渲染修饰，当用户输入完账号密码点击登录时，首先js会对使用者的输入进行非空校验， </span><span >如果账号密码有一个为空都会进行提示不能为空，校验通过后，浏览器会向后台发送一个携带了用户名密码的请求到后台，整个逻辑流程图如图5.5所示。 </span></div><div class="modify" align="right" paraseq="190"><span class="btn btn-blue" onclick="submitPart('登录模块是整个远程遥控系统的起点，页面使用jQuery进行渲染修饰，当用户输入完账号密码点击登录时，首先js会对使用者的输入进行非空校验，如果账号密码有一个为空都会进行提示不能为空，校验通过后，浏览器会向后台发送一个携带了用户名密码的请求到后台，整个逻辑流程图如图5.5所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>192</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.5 登录框架 </span></div></div><div class="para"><div class="duanluo"><span>193</span></div><div class="l"><span style="margin-left:25px"></span><span >后台接收到用户名密码后，进行登录校验，校验成功，则在当前会话中保存用户的登录信息，本系统保存的是用户的账号，然后返回ok。 </span><a href="../sentence_detail/341.htm" target="right" class="orange">如果登录校验失败了，则返回none。</a><span >前台收到返回的消息时，则进行判断，是ok则跳home页面，否则停留在login页面。 </span><span >Login页面如图5.6所示。 </span></div><div class="modify" align="right" paraseq="192"><span class="btn btn-blue" onclick="submitPart('后台接收到用户名密码后，进行登录校验，校验成功，则在当前会话中保存用户的登录信息，本系统保存的是用户的账号，然后返回ok。如果登录校验失败了，则返回none。前台收到返回的消息时，则进行判断，是ok则跳home页面，否则停留在login页面。Login页面如图5.6所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>194</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.5 登录页面 </span></div></div><div class="para"><div class="duanluo"><span>195</span></div><div class="l"><span style="margin-left:25px"></span><a href="../sentence_detail/345.htm" target="right" class="red">当用户名或者密码为空时提示如图5.7所示。</a></div></div><div class="para"><div class="duanluo"><span>196</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.5 账号密码为空时提示 </span></div></div><div class="para"><div class="duanluo"><span>197</span></div><div class="l"><span style="margin-left:25px"></span><span >5.3.2 修改密码 </span></div></div><div class="para"><div class="duanluo"><span>198</span></div><div class="l"><span style="margin-left:25px"></span><a href="../sentence_detail/348.htm" target="right" class="orange">使用者可以通过点击登录页面中的&rdquo;Forgot password?</a><span >&rdquo;来进入修改密码页面，修改密码页面如图5.6所示。 </span></div><div class="modify" align="right" paraseq="197"><span class="btn btn-blue" onclick="submitPart('使用者可以通过点击登录页面中的&rdquo;Forgot password?&rdquo;来进入修改密码页面，修改密码页面如图5.6所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>199</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.6 修改密码页面 </span></div></div><div class="para"><div class="duanluo"><span>200</span></div><div class="l"><span style="margin-left:25px"></span><span >使用者通过输入自己的邮箱来获取验证码，验证码为4位随机数字，保存在redis数据库中，并设置了一分钟有效期， </span><span >使用者必须要验证码失效之前进行验证码的确认。 </span><span >流程图如图5.7所示。 </span></div><div class="modify" align="right" paraseq="199"><span class="btn btn-blue" onclick="submitPart('使用者通过输入自己的邮箱来获取验证码，验证码为4位随机数字，保存在redis数据库中，并设置了一分钟有效期，使用者必须要验证码失效之前进行验证码的确认。流程图如图5.7所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>201</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.6 获取验证码流程 </span></div></div><div class="para"><div class="duanluo"><span>202</span></div><div class="l"><span style="margin-left:25px"></span><span >其中给邮箱发送验证码功能是通过以在163申请的一个邮箱账号配合python内置的smtplib库和MIMEText， </span><span >验证码通过4次循环生成4个随机数生成。 </span></div><div class="modify" align="right" paraseq="201"><span class="btn btn-blue" onclick="submitPart('其中给邮箱发送验证码功能是通过以在163申请的一个邮箱账号配合python内置的smtplib库和MIMEText，验证码通过4次循环生成4个随机数生成。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>203</span></div><div class="l"><span style="margin-left:25px"></span><span >使用者得到验证码后，可进行验证码校验，校验通过后redis将删除验证码，并将邮箱作为key重新设置value值为True，超时时间为5分钟， </span><span >使用者需要在5分钟内进行密码修改，否则需要重新获取验证码。 </span><a href="../sentence_detail/359.htm" target="right" class="red">密码修改界面如图5.7所示。</a></div><div class="modify" align="right" paraseq="202"><span class="btn btn-blue" onclick="submitPart('使用者得到验证码后，可进行验证码校验，校验通过后redis将删除验证码，并将邮箱作为key重新设置value值为True，超时时间为5分钟，使用者需要在5分钟内进行密码修改，否则需要重新获取验证码。密码修改界面如图5.7所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>204</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.7 更改使用者的密码界面 </span></div></div><div class="para"><div class="duanluo"><span>205</span></div><div class="l"><span style="margin-left:25px"></span><span >使用者需要输入两次密码，在后台和前端都有进行两次输入的密码是否一致的验证，两次一致时，密码才会修改成功，然后返回到登录页面。 </span></div><div class="modify" align="right" paraseq="204"><span class="btn btn-blue" onclick="submitPart('使用者需要输入两次密码，在后台和前端都有进行两次输入的密码是否一致的验证，两次一致时，密码才会修改成功，然后返回到登录页面。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>206</span></div><div class="l"><span style="margin-left:25px"></span><span >使用者登录成功后将看到home页面，home页面如图5.8所示。 </span></div><div class="modify" align="right" paraseq="205"><span class="btn btn-blue" onclick="submitPart('使用者登录成功后将看到home页面，home页面如图5.8所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>207</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.8 主页面显示 </span></div></div><div class="para"><div class="duanluo"><span>208</span></div><div class="l"><span style="margin-left:25px"></span><span >Home页面中可以从左侧功能导航栏进入查看未命名设备和我的家电页面。 </span></div><div class="modify" align="right" paraseq="207"><span class="btn btn-blue" onclick="submitPart('Home页面中可以从左侧功能导航栏进入查看未命名设备和我的家电页面。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>209</span></div><div class="l"><span style="margin-left:25px"></span><span >5.4 未命名设备 </span></div></div><div class="para"><div class="duanluo"><span>210</span></div><div class="l"><span style="margin-left:25px"></span><span >在硬件设计部分，红外学习功能使用的是lirc，它在录制时需要指定一个name参数，学习代码中使用的是uuid来代替name参数， </span><span >但是uuid仅仅只是一串在同一时空下不重复的字符串，本身并没有任何意义。 </span><span >所以在学习完成之后，使用者需要登录到系统中，此时系统会提示刚刚学习的设备没有命名，没有命名的设备是不允许被使用的。 </span></div><div class="modify" align="right" paraseq="209"><span class="btn btn-blue" onclick="submitPart('在硬件设计部分，红外学习功能使用的是lirc，它在录制时需要指定一个name参数，学习代码中使用的是uuid来代替name参数，但是uuid仅仅只是一串在同一时空下不重复的字符串，本身并没有任何意义。所以在学习完成之后，使用者需要登录到系统中，此时系统会提示刚刚学习的设备没有命名，没有命名的设备是不允许被使用的。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>211</span></div><div class="l"><span style="margin-left:25px"></span><span >使用者可以通过任何页面的右上角的信息进入未命名页面，学习过的所有未命名的设备都会在这个页面显示，如图5.9所示。 </span><span >这些数据由跳转到这个页面时候携带而来的，在跳转到这个页面之前，后台先进行查询操作，由于没有命名的设备，在数据库中的记录中的state字段会是0， </span><span >所以未命名设备查询所有设备并过滤state字段为0，相关逻辑如图5.10所示。 </span></div><div class="modify" align="right" paraseq="210"><span class="btn btn-blue" onclick="submitPart('使用者可以通过任何页面的右上角的信息进入未命名页面，学习过的所有未命名的设备都会在这个页面显示，如图5.9所示。这些数据由跳转到这个页面时候携带而来的，在跳转到这个页面之前，后台先进行查询操作，由于没有命名的设备，在数据库中的记录中的state字段会是0，所以未命名设备查询所有设备并过滤state字段为0，相关逻辑如图5.10所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>212</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.9 未命名设备的展示 </span></div></div><div class="para"><div class="duanluo"><span>213</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.10 获取未命名设备 </span></div></div><div class="para"><div class="duanluo"><span>214</span></div><div class="l"><span style="margin-left:25px"></span><span >使用者点击删除时，ajax请求会携带该设备的id，后台收到id之后，执行sql删除语句。 </span><span >删除不能恢复。 </span></div><div class="modify" align="right" paraseq="213"><span class="btn btn-blue" onclick="submitPart('使用者点击删除时，ajax请求会携带该设备的id，后台收到id之后，执行sql删除语句。删除不能恢复。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>215</span></div><div class="l"><span style="margin-left:25px"></span><a href="../sentence_detail/376.htm" target="right" class="red">点击命名时，弹出输入框，如图5.11所示。</a></div></div><div class="para"><div class="duanluo"><span>216</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.11 输入新的名字 </span></div></div><div class="para"><div class="duanluo"><span>217</span></div><div class="l"><span style="margin-left:25px"></span><span >确定后，后台处理逻辑流程图如图5.12所示。 </span></div></div><div class="para"><div class="duanluo"><span>218</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.12 重命名的逻辑处理 </span></div></div><div class="para"><div class="duanluo"><span>219</span></div><div class="l"><span style="margin-left:25px"></span><span >重命名逻辑判定同名设备是不行的（基于一种智能家居想法，一个家庭里面可以做到为每一个自己学习的设备起一个不同的名字），命名成功后，将刷新本页面， </span><span >同时该设备不再在该页面中，会出现在我的家电页面中。 </span></div><div class="modify" align="right" paraseq="218"><span class="btn btn-blue" onclick="submitPart('重命名逻辑判定同名设备是不行的（基于一种智能家居想法，一个家庭里面可以做到为每一个自己学习的设备起一个不同的名字），命名成功后，将刷新本页面，同时该设备不再在该页面中，会出现在我的家电页面中。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>220</span></div><div class="l"><span style="margin-left:25px"></span><span >5.5 我的家电 </span></div></div><div class="para"><div class="duanluo"><span>221</span></div><div class="l"><span style="margin-left:25px"></span><span >我的家电页面展示了所有学习好了并且命名好了的家电信息，在前端的设计只显示了序号、自己命名的名字、创建时间、类型以及操作列。 </span><span >家电信息的获取和上文中未命名设备信息的获取原理是一样的。 </span></div><div class="modify" align="right" paraseq="220"><span class="btn btn-blue" onclick="submitPart('我的家电页面展示了所有学习好了并且命名好了的家电信息，在前端的设计只显示了序号、自己命名的名字、创建时间、类型以及操作列。家电信息的获取和上文中未命名设备信息的获取原理是一样的。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>222</span></div><div class="l"><span style="margin-left:25px"></span><span >操作列同样有两个功能，一个是使用该设备，一个是删除该设备，删除逻辑和未命名设备的删除是同一个，所以系统设计的时候也只是设计了一个API， </span><span >两个删除都是使用ajax请求同一个动作。 </span></div><div class="modify" align="right" paraseq="221"><span class="btn btn-blue" onclick="submitPart('操作列同样有两个功能，一个是使用该设备，一个是删除该设备，删除逻辑和未命名设备的删除是同一个，所以系统设计的时候也只是设计了一个API，两个删除都是使用ajax请求同一个动作。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>223</span></div><div class="l"><span style="margin-left:25px"></span><span >整个远程遥控系统的中心在于点击了使用设备。 </span><span >本课题设计了一个网页版的虚拟遥控器，如图5.13所示，当使用者点击使用按钮时，则会进入虚拟按键界面。 </span><span >这个按键的所有按键都是与硬件中的两个4*4矩阵键盘的键值是一一对应的。 </span></div><div class="modify" align="right" paraseq="222"><span class="btn btn-blue" onclick="submitPart('整个远程遥控系统的中心在于点击了使用设备。本课题设计了一个网页版的虚拟遥控器，如图5.13所示，当使用者点击使用按钮时，则会进入虚拟按键界面。这个按键的所有按键都是与硬件中的两个4*4矩阵键盘的键值是一一对应的。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>224</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.13 网页虚拟遥控器示意 </span></div></div><div class="para"><div class="duanluo"><span>225</span></div><div class="l"><span style="margin-left:25px"></span><span >由于存在学习过程中只学了一部分按键，所以可能不会所有按键都有效，本课题的设计是如果该设备没有学习那个按键，则使这个按键禁用，让使用者不能点击， </span><span >如图5.14所示。 </span></div><div class="modify" align="right" paraseq="224"><span class="btn btn-blue" onclick="submitPart('由于存在学习过程中只学了一部分按键，所以可能不会所有按键都有效，本课题的设计是如果该设备没有学习那个按键，则使这个按键禁用，让使用者不能点击，如图5.14所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>226</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.14 尚未学习的按键示意 </span></div></div><div class="para"><div class="duanluo"><span>227</span></div><div class="l"><span style="margin-left:25px"></span><span >没有学习到的按键会变灰且不能点击。这个功能的实现是基于jQuery这个js文件封装库的。 </span><span >逻辑如图5.15所示。 </span></div><div class="modify" align="right" paraseq="226"><span class="btn btn-blue" onclick="submitPart('没有学习到的按键会变灰且不能点击。这个功能的实现是基于jQuery这个js文件封装库的。逻辑如图5.15所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>228</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.15 按键能否点击逻辑图 </span></div></div><div class="para"><div class="duanluo"><span>229</span></div><div class="l"><span style="margin-left:25px"></span><span >部分代码如图5.16所示。 </span></div></div><div class="para"><div class="duanluo"><span>230</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.16 按键能否点击代码 </span></div></div><div class="para"><div class="duanluo"><span>231</span></div><div class="l"><span style="margin-left:25px"></span><span >系统设计时为每个按钮都增加了一个value属性，值为&rdquo;name-key&rdquo;,name是使用者当前使用的设备名字，key为每个按钮对应的键值。 </span><span >同时设计时也为每一个按钮添加了一个点击事情，所有的点击事情指定了同一个函数，这个函数将接受点击的那个按键的value值。 </span><span >远程遥控前端js逻辑如图5.17所示。 </span></div><div class="modify" align="right" paraseq="230"><span class="btn btn-blue" onclick="submitPart('系统设计时为每个按钮都增加了一个value属性，值为&rdquo;name-key&rdquo;,name是使用者当前使用的设备名字，key为每个按钮对应的键值。同时设计时也为每一个按钮添加了一个点击事情，所有的点击事情指定了同一个函数，这个函数将接受点击的那个按键的value值。远程遥控前端js逻辑如图5.17所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>232</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.17 远程遥控发出网络请求 </span></div></div><div class="para"><div class="duanluo"><span>233</span></div><div class="l"><span style="margin-left:25px"></span><span >经过ajax请求，后台就能拿到对应的设备名字以及键值了，后台相应的发送红外的代码如图5.18所示。 </span></div><div class="modify" align="right" paraseq="232"><span class="btn btn-blue" onclick="submitPart('经过ajax请求，后台就能拿到对应的设备名字以及键值了，后台相应的发送红外的代码如图5.18所示。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>234</span></div><div class="l"><span style="margin-left:25px"></span><span >图5.18 远程遥控发射红外代码 </span></div></div><div class="para"><div class="duanluo"><span>235</span></div><div class="l"><span style="margin-left:25px"></span><span >首先通过自定义的名字来获取想要使用的设备的绝对路径和当前设备的真实名字（uuid），然后将其复制到lirc的设备默认路径。 </span><span >接着使用subprocess运行lirc红外发送命令，如果返回结果包含拒绝信息，那么是lirc没有启动，所以启动lirc后再发送一次红外指令， </span><a href="../sentence_detail/407.htm" target="right" class="orange">如果没有返回字符串则代表发送成功，则直接返回True，前端将提示发送成功；</a><span >有返回字符串，则表示红外发射失败，前端提示发送失败信息。 </span></div><div class="modify" align="right" paraseq="234"><span class="btn btn-blue" onclick="submitPart('首先通过自定义的名字来获取想要使用的设备的绝对路径和当前设备的真实名字（uuid），然后将其复制到lirc的设备默认路径。接着使用subprocess运行lirc红外发送命令，如果返回结果包含拒绝信息，那么是lirc没有启动，所以启动lirc后再发送一次红外指令，如果没有返回字符串则代表发送成功，则直接返回True，前端将提示发送成功；有返回字符串，则表示红外发射失败，前端提示发送失败信息。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>236</span></div><div class="l"><span style="margin-left:25px"></span><span >5.6 WEB端总结 </span></div></div><div class="para"><div class="duanluo"><span>237</span></div><div class="l"><span style="margin-left:25px"></span><span >自此，整个基于嵌入式的万能遥控器的设计就结束了。 </span><span >Web端的设计查阅了非常之多的资料，尤其是前端和后台的交互方面的资料，课题设计里每一种情况都有做考虑，所以本课题的容错率是较高的。 </span></div><div class="modify" align="right" paraseq="236"><span class="btn btn-blue" onclick="submitPart('自此，整个基于嵌入式的万能遥控器的设计就结束了。Web端的设计查阅了非常之多的资料，尤其是前端和后台的交互方面的资料，课题设计里每一种情况都有做考虑，所以本课题的容错率是较高的。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>238</span></div><div class="l"><span style="margin-left:25px"></span><span >6  总结 </span></div></div><div class="para"><div class="duanluo"><span>239</span></div><div class="l"><span style="margin-left:25px"></span><span >整个系统设计是一个从无到有的过程，从开始拿到毕设课题时的迷茫到现在完成了毕设，整个过程有太多的艰辛，伴随着太多的谷歌查资料、图书馆看书。 </span><span >所有相关技术的一点点积累，才逐渐有了硬件、WEB的联系交互，才逐渐有了硬件分哪些模块、WEB分哪些模块的想法。 </span></div><div class="modify" align="right" paraseq="238"><span class="btn btn-blue" onclick="submitPart('整个系统设计是一个从无到有的过程，从开始拿到毕设课题时的迷茫到现在完成了毕设，整个过程有太多的艰辛，伴随着太多的谷歌查资料、图书馆看书。所有相关技术的一点点积累，才逐渐有了硬件、WEB的联系交互，才逐渐有了硬件分哪些模块、WEB分哪些模块的想法。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>240</span></div><div class="l"><span style="margin-left:25px"></span><span >系统设计的过程让笔者自我沉淀许多，在这个自我积累的过程中，笔者也收获了很多。 </span><span >尽管想清楚怎么分模块，但是对于各个模块的的功能实现还是一筹莫展，经过多次上网搜索和去图书馆参阅资料，最终发现了lirc这个开源软件。 </span><span >确定了基石，那么建高楼的材料就更好确定了，因为lirc是运行在linux系统上，所以便采用了Raspberry Pi作为整个系统的容器。 </span></div><div class="modify" align="right" paraseq="239"><span class="btn btn-blue" onclick="submitPart('系统设计的过程让笔者自我沉淀许多，在这个自我积累的过程中，笔者也收获了很多。尽管想清楚怎么分模块，但是对于各个模块的的功能实现还是一筹莫展，经过多次上网搜索和去图书馆参阅资料，最终发现了lirc这个开源软件。确定了基石，那么建高楼的材料就更好确定了，因为lirc是运行在linux系统上，所以便采用了Raspberry Pi作为整个系统的容器。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>241</span></div><div class="l"><span style="margin-left:25px"></span><span >选好材料后，对模块的划分又更加明确了，然后是查看文档，将相关的技术熟悉起来。 </span></div><div class="modify" align="right" paraseq="240"><span class="btn btn-blue" onclick="submitPart('选好材料后，对模块的划分又更加明确了，然后是查看文档，将相关的技术熟悉起来。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>242</span></div><div class="l"><span style="margin-left:25px"></span><span >设计的过程无疑是非常消耗时间且无聊的，但是在这个过程中能学到很多东西却又让人非常开心，尤其是当一步一步设计都有成果时让人非常雀跃。 </span></div><div class="modify" align="right" paraseq="241"><span class="btn btn-blue" onclick="submitPart('设计的过程无疑是非常消耗时间且无聊的，但是在这个过程中能学到很多东西却又让人非常开心，尤其是当一步一步设计都有成果时让人非常雀跃。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>243</span></div><div class="l"><span style="margin-left:25px"></span><span >基于嵌入式的万能遥控器还不是一个非常完善的作品，还有许多性能问题依旧可以设计的更加高效，当然这是由于作者目前的水平有限。 </span><span >它目前有的功能： </span></div><div class="modify" align="right" paraseq="242"><span class="btn btn-blue" onclick="submitPart('基于嵌入式的万能遥控器还不是一个非常完善的作品，还有许多性能问题依旧可以设计的更加高效，当然这是由于作者目前的水平有限。它目前有的功能：',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>244</span></div><div class="l"><span style="margin-left:25px"></span><span >（1）	学习功能 </span></div></div><div class="para"><div class="duanluo"><span>245</span></div><div class="l"><span style="margin-left:25px"></span><span >（2）	遥控功能 </span></div></div><div class="para"><div class="duanluo"><span>246</span></div><div class="l"><span style="margin-left:25px"></span><span >（3）	远程遥控功能 </span></div></div><div class="para"><div class="duanluo"><span>247</span></div><div class="l"><span style="margin-left:25px"></span><span >后面的话会完善更多的功能，作者亦将不断创新、学习。 </span></div></div><div class="para"><div class="duanluo"><span>248</span></div><div class="l"><span style="margin-left:25px"></span><span >7  展望 </span></div></div><div class="para"><div class="duanluo"><span>249</span></div><div class="l"><span style="margin-left:25px"></span><span >近年来，红外遥控器的发展也越来远快，许多遥控器上都出现了学习功能，然而绝大多数遥控器其实并没有学习功能，更不要说是远程遥控。 </span><span >人们的需求在增加，一个一个的遥控器已经很难满足人们的需求了，因为一旦当遥控器坏了还得要跑去买一个专门的遥控器。 </span><span >基于嵌入式的万能遥控器，及支持学习功能，有支持远程遥控功能，试想，人们远在千里之外都能遥控家里的家电的设备， </span><a href="../sentence_detail/430.htm" target="right" class="orange">这又怎能不让人喜欢、怎能不满足人们的需求呢，所以基于嵌入式的万能遥控器具有非常深远的意义和非常广阔的市场前景。</a></div><div class="modify" align="right" paraseq="248"><span class="btn btn-blue" onclick="submitPart('近年来，红外遥控器的发展也越来远快，许多遥控器上都出现了学习功能，然而绝大多数遥控器其实并没有学习功能，更不要说是远程遥控。人们的需求在增加，一个一个的遥控器已经很难满足人们的需求了，因为一旦当遥控器坏了还得要跑去买一个专门的遥控器。基于嵌入式的万能遥控器，及支持学习功能，有支持远程遥控功能，试想，人们远在千里之外都能遥控家里的家电的设备，这又怎能不让人喜欢、怎能不满足人们的需求呢，所以基于嵌入式的万能遥控器具有非常深远的意义和非常广阔的市场前景。',this)" class="modify">段落修改</div></div><div class="para"><div class="duanluo"><span>250</span></div><div class="l"><span style="margin-left:25px"></span><span >本系统的设计仅仅采用了网页版的远程遥控，笔者认为这是完全不够的，基于嵌入式的万能遥控器还有开发的必要性， </span><span >可以介入微信的控制、可以适配安卓APP或者是ios苹果应用的控制，也可以接入一个网络摄像头，这样人们还可以试试查看设备的运行情况， </span><span >或者增加自定义定时的功能。 </span><span >打造一个越来越智能的遥控器，您觉得您会喜欢吗？ </span></div><div class="modify" align="right" paraseq="249"><span class="btn btn-blue" onclick="submitPart('本系统的设计仅仅采用了网页版的远程遥控，笔者认为这是完全不够的，基于嵌入式的万能遥控器还有开发的必要性，可以介入微信的控制、可以适配安卓APP或者是ios苹果应用的控制，也可以接入一个网络摄像头，这样人们还可以试试查看设备的运行情况，或者增加自定义定时的功能。打造一个越来越智能的遥控器，您觉得您会喜欢吗？',this)" class="modify">段落修改</div></div><div align="center" class="navigation"><a href="paper_1.htm"><span class="btn_gray">首页</span></a><a  href="paper_1.htm"><span class="btn_gray">上一页</span></a><a href="#"><span class="btn_gray">下一页</span></a><a href="paper_2.htm">	<span class="btn_gray">尾页</span></a><span>页码：2/2页</span></div><div class="footer"><div align="center" class="a666" style="font-size:14px;padding-top:50px;padding-bottom:30px;"><div>检测报告由 <a class="nounderline" href="http://www.ptcheck.com" target="_blank">PTcheck</a>文献相似度检测系统生成 </div><div>Copyright © 2007-2018 PTcheck </div></div></div></div></body></html>
