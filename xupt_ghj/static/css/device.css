@@ -1,0 +1,283 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    font: 12px/1 Tahoma, Helvetica, Arial, “\5b8b\4f53”, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    background: url("/static/image/remotebg.jpg") no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+
+ul {
+    margin-top: 10px;
+}
+
+ul > li {
+    list-style: none;
+    float: left;
+    width: 40px;
+    margin: 5px 15px 0;
+    text-align: center;
+    line-height: 40px;
+    padding-left: 20px;
+}
+
+.remote {
+    margin: 0 auto;
+    width: 300px;
+    height: 95%;
+    border: 3px solid #8aa4af;
+    background-color: #0c0c0c;
+    border-radius: 2px;
+}
+
+.back {
+    margin: 0 auto;
+    width: 300px;
+    height: 4%;
+    text-align: center;
+    border: 3px solid #8aa4af;
+    border-top: none;
+    overflow: hidden;
+}
+
+.back a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding-top: 1em;
+    text-decoration: none;
+    background-color: #acaaaf;
+}
+
+.back a:hover {
+    background-color: #6c81ff;
+    color: #ffffff;
+}
+
+.remote > .power {
+    width: 100%;
+    position: relative;
+    height: 40px;
+}
+
+.remote > .power > #KEY_POWER {
+    top: 5px;
+    height: 30px;
+    position: absolute;
+    right: 10px;
+    background-color: red;
+    text-align: center;
+    border-radius: 50%;
+    width: 50px;
+}
+
+.remote > .power > #KEY_POWER:active {
+    background-color: #51a7ff;
+    color: #ffffff;
+}
+
+.num .num-123, .num .num-456, .num .num-789, .num .num-0ob {
+    height: 40px;
+}
+
+.num .num-123 button, .num .num-456 button, .num .num-789 button, .num .num-0ob button {
+    width: 100%;
+    height: 37px;
+    background-color: #acaaaf;
+    border-radius: 5px;
+    border-width: 0 0 2px;
+    border-color: transparent transparent #604d47;
+    border-style: dashed dashed solid;
+}
+
+#KEY_HOME {
+    background-color: yellow;
+}
+
+#KEY_BACK {
+    background-color: #00a65a;
+}
+
+.num ul > li > button:active, #KEY_BACK:active, #KEY_HOME:active {
+    background-color: #51a7ff;
+    color: #ffffff;
+}
+
+.menu {
+    position: relative;
+    height: 200px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.menu .menu-key {
+    position: absolute;
+    width: 200px;
+    height: 160px;
+    margin-top: 10px;
+    margin-left: 50px;
+}
+
+table {
+    width: 100%;
+    height: 100%;
+}
+
+table span {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: #acaaaf;
+}
+
+.button-up {
+    width: 40px;
+    height: 40px;
+    background: url("/static/image/images/up_03.png") no-repeat;
+    background-size: 100% 100%;
+}
+
+.button-down {
+    width: 40px;
+    height: 40px;
+    background: url("/static/image/images/down.png") no-repeat;
+    background-size: 100% 100%;
+}
+
+.button-left {
+    width: 40px;
+    height: 40px;
+    background: url("/static/image/images/left.png") no-repeat;
+    background-size: 100% 100%;
+}
+
+.button-right {
+    width: 40px;
+    height: 40px;
+    background: url("/static/image/images/right.png") no-repeat;
+    background-size: 100% 100%;
+}
+
+.button-ok {
+    background-color: #acaaaf;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+}
+
+.menu .menu-key button:active, .menu .menu-key span:active {
+    background-color: #51a7ff;
+    color: #ffffff;
+}
+
+.footer {
+    width: 100%;
+    height: 240px;
+    position: relative;
+}
+
+.footer .voice {
+    color: #ffffff;
+    position: absolute;
+    height: 200px;
+    width: 50px;
+    margin-top: 20px;
+    margin-left: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #acaaaf;
+}
+
+.footer .voice ul > li {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.footer .voice button {
+    width: 50px;
+    height: 40px;
+    background-color: #acaaaf;
+}
+
+.footer .voice button:active {
+    background-color: #51a7ff;
+    color: #ffffff;
+}
+
+.footer .voice .voice-li .voice-text {
+    padding-left: 5px;
+    margin-bottom: 15px;
+}
+
+#KEY_VOLUMEUP {
+    position: relative;
+    top: -16px;
+}
+
+.footer .air-condition {
+    position: absolute;
+    height: 200px;
+    width: 70px;
+    margin-top: 20px;
+    margin-left: 38%;
+    text-align: center;
+    line-height: 200px;
+}
+
+.footer .air-condition button {
+    height: 40px;
+    width: 70px;
+    border-radius: 50%;
+    background-color: #acaaaf;
+    border-bottom: 3px solid #604d47;
+}
+
+.footer .air-condition button:active {
+    background-color: #51a7ff;
+    color: #ffffff;
+}
+
+.footer .channel {
+    color: #ffffff;
+    position: absolute;
+    height: 200px;
+    width: 50px;
+    margin-top: 20px;
+    margin-left: 73%;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #acaaaf;
+}
+
+.footer .channel ul > li {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.footer .channel button {
+    width: 50px;
+    height: 40px;
+    background-color: #acaaaf;
+}
+
+.footer .channel .channel-li .channel-text {
+    padding-left: 5px;
+    margin-bottom: 15px;
+}
+
+#KEY_CHANNELUP {
+    position: relative;
+    top: -16px;
+}
+
+.footer .channel button:active {
+    background-color: #51a7ff;
+    color: #ffffff;
+}

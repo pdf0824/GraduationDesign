@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/css/message.css">
+    <link rel="stylesheet" href="/static/css/device.css">
+    <title>{{ name }}</title>
+</head>
+<body>
+<div class="remote" id="remote">
+    <div class="power">
+        <button value="{{ name }}-KEY_POWER" id="KEY_POWER">电源</button>
+    </div>
+    <div class="num">
+        <ul class="num-123">
+            <li>
+                <button class="button-line" id="KEY_1" value="{{ name }}-KEY_1">1</button>
+            </li>
+            <li>
+                <button class="button-line" id="KEY_2" value="{{ name }}-KEY_2">2</button>
+            </li>
+            <li>
+                <button class="button-line" id="KEY_3" value="{{ name }}-KEY_3">3</button>
+            </li>
+        </ul>
+        <ul class="num-456">
+            <li>
+                <button class="button-line" id="KEY_4" value="{{ name }}-KEY_4">4</button>
+            </li>
+            <li>
+                <button class="button-line" id="KEY_5" value="{{ name }}-KEY_5">5</button>
+            </li>
+            <li>
+                <button class="button-line" id="KEY_6" value="{{ name }}-KEY_6">6</button>
+            </li>
+        </ul>
+        <ul class="num-789">
+            <li>
+                <button class="button-line" id="KEY_7" value="{{ name }}-KEY_7">7</button>
+            </li>
+            <li>
+                <button class="button-line" id="KEY_8" value="{{ name }}-KEY_8">8</button>
+            </li>
+            <li>
+                <button class="button-line" id="KEY_9" value="{{ name }}-KEY_9">9</button>
+            </li>
+        </ul>
+        <ul class="num-0ob">
+            <li>
+                <button class="button-line" value="{{ name }}-KEY_HOME" id="KEY_HOME">主页</button>
+            </li>
+            <li>
+                <button class="button-line" id="KEY_0" value="{{ name }}-KEY_0">0</button>
+            </li>
+            <li>
+                <button class="button-line" value="{{ name }}-KEY_BACK" id="KEY_BACK">退出</button>
+            </li>
+        </ul>
+    </div>
+    <div class="menu">
+        <div class="menu-key">
+            <table>
+                <tr>
+                    <td colspan="3">
+                        <span><button id="KEY_UP" class="button-up" value="{{ name }}-KEY_UP"></button></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span><button id="KEY_LEFT" class="button-left" value="{{ name }}-KEY_LEFT"></button></span>
+                    </td>
+                    <td>
+                        <button class="button-ok" id="KEY_OK" value="{{ name }}-KEY_OK">OK</button>
+                    </td>
+                    <td>
+                        <span><button class="button-right" id="KEY_RIGHT" value="{{ name }}-KEY_RIGHT"></button></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <span><button class="button-down" id="KEY_DOWN" value="{{ name }}-KEY_DOWN"></button></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="voice">
+            <ul class="voice-li">
+                <li>
+                    <button id="KEY_VOLUMEUP" value="{{ name }}-KEY_VOLUMEUP">+</button>
+                </li>
+                <li class="voice-text">音<br>量</li>
+                <li>
+                    <button id="KEY_VOLUMEDOWN" value="{{ name }}-KEY_VOLUMEDOWN">-</button>
+                </li>
+            </ul>
+        </div>
+        <div class="air-condition">
+            <button id="KEY_MODE" value="{{ name }}-KEY_MODE">启</button>
+        </div>
+        <div class="channel">
+            <ul class="channel-li">
+                <li>
+                    <button id="KEY_CHANNELUP" value="{{ name }}-KEY_CHANNELUP">+</button>
+                </li>
+                <li class="channel-text">频<br>道</li>
+                <li>
+                    <button id="KEY_CHANNELDOWN" value="{{ name }}-KEY_CHANNELDOWN">-</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="back">
+    <a href="/mine">返回我的家电</a>
+</div>
+<script src="/static/jquery/jquery-2.2.3.min.js"></script>
+<script src="/static/js/message.js"></script>
+<script src="/static/js/device.js"></script>
+<script>
+    $('#remote button').attr('disabled', 'true');
+    {% for mode in device %}
+        {% if mode.key_one == '1' %}
+            $("#KEY_1").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_two == '1' %}
+            $("#KEY_2").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_three == '1' %}
+            $("#KEY_3").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_four == '1' %}
+            $("#KEY_4").removeAttr('disabled');
+        {% endif %}
+
+        {% if mode.key_five == '1' %}
+            $("#KEY_5").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_six == '1' %}
+            $("#KEY_6").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_seven == '1' %}
+            $("#KEY_7").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_eight == '1' %}
+            $("#KEY_8").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_nine == '1' %}
+            $("#KEY_9").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_zero == '1' %}
+            $("#KEY_0").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_home == '1' %}
+            $("#KEY_HOME").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_back == '1' %}
+            $("#KEY_BACK").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_up == '1' %}
+            $("#KEY_UP").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_down == '1' %}
+            $("#KEY_DOWN").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_left == '1' %}
+            $("#KEY_LEFT").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_right == '1' %}
+            $("#KEY_RIGHT").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_ok == '1' %}
+            $("#KEY_OK").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_volume_up == '1' %}
+            $("#KEY_VOLUMEUP").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_volume_down == '1' %}
+            $("#KEY_VOLUMEDOWN").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_channel_down == '1' %}
+            $("#KEY_CHANNELDOWN").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_channel_up == '1' %}
+            $("#KEY_CHANNELUP").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_mode == '1' %}
+            $("#KEY_MODE").removeAttr('disabled');
+        {% endif %}
+        {% if mode.key_power == '1' %}
+            $("#KEY_POWER").removeAttr('disabled');
+        {% endif %}
+    {% endfor %}
+
+</script>
+</body>
+</html>

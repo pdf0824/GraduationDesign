@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/css/message.css" rel="stylesheet">
+    <title>登录微信</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body, html {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+    }
+
+    .img-wx {
+        width: 450px;
+        height: 450px;
+        margin: 0 auto;
+        text-align: center;
+    }
+</style>
+<body>
+<div class="img-wx">
+    <img src='/static/wx/wx.png'>
+</div>
+<script src="/static/jquery/jquery-2.2.3.min.js"></script>
+<script src="/static/js/message.js"></script>
+<script>
+    function doajax() {
+
+        $.ajax({
+            url: '/wx.c',
+            method: 'get',
+            async: false,
+            success: function (data) {
+                if (data == 'ok') {
+                    $.message('成功登录');
+                    window.location.href = '/home';
+                } else {
+                    console.log('联系管理员');
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                alert('网络超时');
+            }
+        })
+    }
+
+    setInterval("doajax()", "1000");
+</script>
+</body>
+</html>
